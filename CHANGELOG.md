@@ -1,12 +1,7 @@
-Early version 1.0_RELEASE CANDIDATE 3.5
+Changelog 1.0 RELEASE | What's New:
 
-What's new?
-
-• 🤫 Invisible change of fonts for a more pleasant reading experience.
-• 🗺️ Added applications: Maps and Notepad for convenience and organization.
-• 🧠 Neural network is now available (works on some devices)!
-• 📞 New phone logo for freshness. 
-• 🎨 Changes in color scheme for Chinese keyboard and calculator.
-• 🇷🇸 Translation into Serbian (still in the early stages).
-• New our own ringtones
-download in readme.md
+* **System UI Overhaul:**  We've redesigned the system interface for a fresh and improved user experience.
+* **System Library Updates:** Updated libeffectproxy.so for enhanced performance and stability.
+* **Launcher Revamp:**  The launcher has been redesigned with new features and improvements.
+* **New Icons:**  Introducing a set of fresh and modern icons to enhance the visual appeal.
+* **Updated App Background:**  The default background for applications has been updated to hex #ff383838.
