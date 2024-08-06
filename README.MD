@@ -6,5 +6,6 @@ I don’t know how to compress my OS to such a level that it would be less than 
 so, here it is:
 VMOS PRO VERSIONS:
 
-1.0 rc-3.5: https://t.me/zenithos_os/66
-1.0 rc-3.5 [ENGLISH]: https://t.me/ZenithOS_os_en/3
+1.0 release: https://t.me/ZenithOS_os_en/13
+1.0 rc-3.5: https://t.me/ZenithOS_os_en/3
+
