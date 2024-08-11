@@ -1,0 +1,133 @@
+# ZenithOS Source Code
+
+This md contains the source code for various components of the ZenithOS operating system. We believe in open-source development and want to make our code accessible to the community for learning, collaboration, and improvement.
+
+The code within this repository is released under the [Specify License Name, e.g., MIT License]. This license grants you the freedom to use, modify, and distribute the code, subject to the terms and conditions outlined in the license file. Please review the license file carefully before using or distributing this code.
+We encourage contributions and collaboration from the community. If you find any bugs, have suggestions for improvements, or want to contribute new features, please feel free to submit pull requests or open issues on this repository.
+
+libirda.so -- Source Code (NOT FINALLY DONE)
+#include <jni.h>
+#include <string>
+#include <android/log.h>
+#include <fcntl.h>
+#include "socket.h"
+#include "irda.h"
+#include <unistd.h> //  for  close()
+#include <errno.h>  //  for  errno
+#include <string.h> //  fot  strerror()
+
+//ATTENTION, ALL COMMENTS WILL BE IN RUSSIAN NOW
+#define TAG "IrDA_JNI"
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_example_app_IrDAController_sendIrDAData(JNIEnv *env, jobject /* this */, jstring data) {
+    //  Проверяем,  что  переданная  строка  не  равна  null
+    if (data == nullptr) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: Data is null");
+        return env->NewStringUTF("Error: Data is null");
+    }
+
+    //  Получаем  C-строку  из  Java-строки
+    const char *nativeData = env->GetStringUTFChars(data, nullptr);
+
+    //  Проверяем,  что  преобразование  прошло  успешно
+    if (nativeData == nullptr) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: Failed to convert data to C string");
+        return env->NewStringUTF("Error: Failed to convert data to C string");
+    }
+
+    //  Проверяем  наличие  IrDA
+    if (access("/dev/irda0", F_OK) == -1) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: IrDA device not found");
+        return env->NewStringUTF("Error: IrDA device not found");
+    }
+
+    //  Получаем  файловый  дескриптор  устройства  IrDA
+    int irda_device_fd = open("/dev/irda0", O_RDWR);
+
+    if (irda_device_fd < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: Failed to open IrDA device: %s", strerror(errno));
+        return env->NewStringUTF("Error: Failed to open IrDA device");
+    }
+
+    //  Отправляем  данные  через  IrDA
+    int result = ioctl(irda_device_fd, IRDA_CMD_SEND_DATA, nativeData);
+
+    if (result < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: Failed to send data via IrDA: %s", strerror(errno));
+        close(irda_device_fd);
+        return env->NewStringUTF("Error: Failed to send data via IrDA");
+    }
+
+    //  Закрываем  файловый  дескриптор
+    close(irda_device_fd);
+
+    //  Освобождаем  ресурсы
+    env->ReleaseStringUTFChars(data, nativeData);
+
+    return env->NewStringUTF("Data sent successfully");
+}
+
+(experienced developers can fix this file)
+
+libzenithserv.so -- Source Code
+
+#include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <string.h>
+
+int main() {
+  // Создаем сокет
+  int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+  if (server_socket == 0) {
+    std::cerr << "Ошибка создания сокета" << std::endl;
+    return 1;
+  }
+
+  // Задаем адрес и порт сервера
+  sockaddr_in address;
+  address.sin_family = AF_INET;
+  address.sin_addr.s_addr = INADDR_ANY;
+  address.sin_port = htons(8080);
+
+  // Привязываем сокет к адресу
+  if (bind(server_socket, (struct sockaddr *)&address, sizeof(address)) < 0) {
+    std::cerr << "Ошибка привязки сокета" << std::endl;
+    return 1;
+  }
+
+  // Начинаем прослушивание соединений
+  if (listen(server_socket, 3) < 0) {
+    std::cerr << "Ошибка прослушивания" << std::endl;
+    return 1;
+  }
+
+  std::cout << "Сервер запущен на порту 8080" << std::endl;
+
+  while (true) {
+    // Принимаем соединение
+    int new_socket = accept(server_socket, (struct sockaddr *)&address, (socklen_t*)&address);
+    if (new_socket < 0) {
+      std::cerr << "Ошибка принятия соединения" << std::endl;
+      continue;
+    }
+
+    // Отправляем сообщение клиенту
+    char buffer[1024] = {0};
+    read(new_socket, buffer, 1024);
+    std::cout << "Получено сообщение от клиента: " << buffer << std::endl;
+    const char *hello = "Привет от сервера!";
+    send(new_socket, hello, strlen(hello), 0);
+
+    // Закрываем соединение
+    close(new_socket);
+  }
+
+  return 0;
+}
+
+(tested, everything works)
+
+we believe in open source development
