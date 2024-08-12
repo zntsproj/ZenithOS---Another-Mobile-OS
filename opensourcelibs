@@ -2,7 +2,7 @@
 
 This md contains the source code for various components of the ZenithOS operating system. We believe in open-source development and want to make our code accessible to the community for learning, collaboration, and improvement.
 
-The code within this repository is released under the [Specify License Name, e.g., MIT License]. This license grants you the freedom to use, modify, and distribute the code, subject to the terms and conditions outlined in the license file. Please review the license file carefully before using or distributing this code.
+The code within this repository is released under the MIT. This license grants you the freedom to use, modify, and distribute the code, subject to the terms and conditions outlined in the license file. Please review the license file carefully before using or distributing this code.
 We encourage contributions and collaboration from the community. If you find any bugs, have suggestions for improvements, or want to contribute new features, please feel free to submit pull requests or open issues on this repository.
 
 libirda.so -- Source Code (NOT FINALLY DONE)
