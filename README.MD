@@ -14,4 +14,4 @@ VMOS PRO VERSIONS:
 
 stock firmware:
 
-soon
+1.1: https://t.me/ZenithOS_os_en/28 (CAN BE VERY UNSTABLE)
